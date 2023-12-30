@@ -6,7 +6,7 @@ import { storage } from "@/utils/storage";
 import { TODO_KEY } from "@/config/storageKeys";
 import { Spinner } from "@nextui-org/react";
 
-export default function Todos({ todos }: { todos: Todo[] }) {
+export default function Todos({ todos }: Readonly<{ todos: Todo[] }>) {
   const [todoItems, setTodoItems] = useState<Todo[]>([]);
 
   const getTodoItems = useCallback(() => {

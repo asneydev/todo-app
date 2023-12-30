@@ -10,10 +10,11 @@ import {
   Input,
   Divider,
 } from "@nextui-org/react";
-import { Audio, UseRecorder } from "@/utils/types/recorderTypes";
+import { UseRecorder } from "@/utils/types/recorderTypes";
 import useRecorder from "@/utils/recordNote/useRecorder";
 import useRecordingsList from "@/utils/recordNote/useRecordingList";
 import { Note, NoteProps } from "@/app/types/types";
+import { blobConverter } from "@/utils/blobConverter";
 
 const INITIAL_NOTE_STATE = {
   title: "",
@@ -23,12 +24,14 @@ const INITIAL_NOTE_STATE = {
 
 export default function NoteModal({ isOpen, onClose, saveNote }: NoteProps) {
   const [note, setNote] = useState<Note>(INITIAL_NOTE_STATE);
+  const { b64toBlob } = blobConverter();
   const {
     recorderState,
     startRecording,
     saveRecording,
     cancelRecording,
   }: UseRecorder = useRecorder();
+
   const { audio, recordingMinutes, recordingSeconds, initRecording } =
     recorderState;
   const { recordings, deleteAudio } = useRecordingsList(audio);
@@ -119,7 +122,12 @@ export default function NoteModal({ isOpen, onClose, saveNote }: NoteProps) {
                   <div className="recordings-list">
                     {recordings.map((record) => (
                       <div className="record" key={record.key}>
-                        <audio controls src={record.audio} />
+                        <audio
+                          controls
+                          src={window.URL.createObjectURL(
+                            b64toBlob(record.audio)
+                          )}
+                        />
                         <div className="delete-button-container">
                           <button
                             className="delete-button"

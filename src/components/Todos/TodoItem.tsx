@@ -1,4 +1,5 @@
 import { Todo } from "@/app/types/types";
+import { blobConverter } from "@/utils/blobConverter";
 import {
   Card,
   CardBody,
@@ -10,10 +11,10 @@ import {
 export default function TodoItem<FC>({
   title,
   description,
-  done,
   priority,
-  audio
-}: Todo) {
+  audio,
+}: Readonly<Todo>) {
+  const { b64toBlob } = blobConverter();
   //TODO: get priority typeof in Todo
   const getPiorityColor = (priority: string) => {
     if (priority === "low") {
@@ -28,7 +29,9 @@ export default function TodoItem<FC>({
 
   return (
     <li>
-      <Card className={`w-full border-${getPiorityColor(priority)} my-4 relative`}>
+      <Card
+        className={`w-full border-${getPiorityColor(priority)} my-4 relative`}
+      >
         {!!title && (
           <>
             <CardHeader className="flex gap-3">
@@ -49,13 +52,18 @@ export default function TodoItem<FC>({
               </div>
             </div>
           )}
-          {audio && audio.length > 0 && <>
-            {audio.map((record) => (
-                      <div className="record" key={record.key}>
-                        <audio controls src={record.audio} />
-                      </div>
-                    ))}
-          </>}
+          {audio && audio.length > 0 && (
+            <>
+              {audio.map((record) => (
+                <div className="record" key={record.key}>
+                  <audio
+                    controls
+                    src={window.URL.createObjectURL(b64toBlob(record.audio))}
+                  />
+                </div>
+              ))}
+            </>
+          )}
         </CardBody>
         <Divider />
       </Card>
