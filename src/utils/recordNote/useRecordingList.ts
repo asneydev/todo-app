@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { Audio } from "../types/recorderTypes";
 
-export default function useRecordingsList(audio: string  | null) {
+export default function useRecordingsList(audio: string | null) {
   const [recordings, setRecordings] = useState<Audio[]>([]);
 
   useEffect(() => {
@@ -17,7 +17,11 @@ export default function useRecordingsList(audio: string  | null) {
   };
 }
 
-export function deleteAudio(audioKey: string, setRecordings: SetRecordings) {
-    setRecordings((prevState:Audio[]) => prevState.filter((record) => record.key !== audioKey));
-  }
-  
+export function deleteAudio(
+  audioKey: string,
+  setRecordings: Dispatch<SetStateAction<Audio[]>>
+) {
+  setRecordings((prevState: Audio[]) =>
+    prevState.filter((record) => record.key !== audioKey)
+  );
+}
