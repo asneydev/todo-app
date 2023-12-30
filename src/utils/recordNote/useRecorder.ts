@@ -19,7 +19,6 @@ const initialState: Recorder = {
 const MAX_RECORDER_TIME = 5;
 
 export default function useRecorder() {
-  const [isRecording, setIsRecording] = useState<Boolean>(false);
   const [recorderState, setRecorderState] = useState<Recorder>(initialState);
   const { blobToBase64 } = blobConverter();
 
@@ -86,6 +85,7 @@ export default function useRecorder() {
       };
 
       recorder.onstop = async () => {
+        console.log("stop");
         const blob = new Blob(chunks, { type: "audio/ogg; codecs=opus" });
 
         const audioRecord = (await blobToBase64(blob)) as string;
@@ -101,29 +101,12 @@ export default function useRecorder() {
         });
       };
     }
-
-    return () => {
-      if (recorder)
-        recorder.stream
-          .getAudioTracks()
-          .forEach((track: AudioTrack) => track.stop());
-    };
   }, [recorderState.mediaRecorder, blobToBase64]);
 
   return {
     recorderState,
-    isRecording,
-    startRecording: () => {
-      setIsRecording(true);
-      startRecording(setRecorderState);
-    },
-    cancelRecording: () => {
-      setRecorderState(initialState);
-      setIsRecording(false);
-    },
-    saveRecording: () => {
-      saveRecording(recorderState.mediaRecorder);
-      setIsRecording(false);
-    },
+    startRecording: () => startRecording(setRecorderState),
+    cancelRecording: () => setRecorderState(initialState),
+    saveRecording: () => saveRecording(recorderState.mediaRecorder),
   };
 }

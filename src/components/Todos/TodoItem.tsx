@@ -13,7 +13,7 @@ export default function TodoItem<FC>({
   description,
   priority,
   audio,
-}: Readonly<Todo>) {
+}: Todo) {
   const { b64toBlob } = blobConverter();
   //TODO: get priority typeof in Todo
   const getPiorityColor = (priority: string) => {

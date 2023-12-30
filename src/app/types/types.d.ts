@@ -6,13 +6,14 @@ export type Todo = {
   description: string;
   done: boolean;
   priority: "low" | "medium" | "height";
-  audio:Audio[]
+  audio: Audio[];
 };
 
 export type Note = {
+  id: number;
   title: string;
   description: string;
-  audio: Audio[]
+  audio: Audio[];
 };
 
 export type NoteProps = {

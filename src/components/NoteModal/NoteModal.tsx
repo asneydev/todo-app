@@ -17,6 +17,7 @@ import { Note, NoteProps } from "@/app/types/types";
 import { blobConverter } from "@/utils/blobConverter";
 
 const INITIAL_NOTE_STATE = {
+  id: Date.now(),
   title: "",
   description: "",
   audio: [],
@@ -46,7 +47,7 @@ export default function NoteModal({ isOpen, onClose, saveNote }: NoteProps) {
   }, [recordings]);
 
   const handleSaveNote = () => {
-    saveNote(note);
+    saveNote({ ...note, id: Date.now() });
     onClose();
     setNote(INITIAL_NOTE_STATE);
   };
@@ -84,7 +85,7 @@ export default function NoteModal({ isOpen, onClose, saveNote }: NoteProps) {
                 Audio note{" "}
                 <span className="text-gray-600 text-xs">( Max 5 minutes )</span>
               </h2>
-              {recordingSeconds}:{recordingMinutes}
+              {recordingMinutes}:{recordingSeconds}
               {initRecording && (
                 <div className="cancel-button-container">
                   <button
@@ -101,7 +102,7 @@ export default function NoteModal({ isOpen, onClose, saveNote }: NoteProps) {
                   onPress={saveRecording}
                   isDisabled={recordingSeconds === 0}
                   color="success"
-                  endContent={<p>P</p>}
+                  endContent={<p>{"#"}</p>}
                 >
                   Save
                 </Button>
@@ -109,7 +110,7 @@ export default function NoteModal({ isOpen, onClose, saveNote }: NoteProps) {
                 <Button
                   onPress={startRecording}
                   color="primary"
-                  endContent={<p>P</p>}
+                  endContent={<p>{">"}</p>}
                 >
                   Start
                 </Button>
